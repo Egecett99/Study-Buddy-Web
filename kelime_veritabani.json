@@ -191,4 +191,55 @@
     "facilitate": {
         "anlam": "kolaylaştırmak",
         "tur": "verb",
-        "ornek": "Fly-by-wire systems facilitate better control over complex
+        "ornek": "Fly-by-wire systems facilitate better control over complex maneuvers.",
+        "oncelik": 65,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "constraint": {
+        "anlam": "kısıtlama",
+        "tur": "noun",
+        "ornek": "Fuel capacity is a major constraint for long-range space missions.",
+        "oncelik": 55,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "acquire": {
+        "anlam": "edinmek",
+        "tur": "verb",
+        "ornek": "Pilots must acquire a specific license before flying multi-engine aircraft.",
+        "oncelik": 25,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "clarify": {
+        "anlam": "açıklığa kavuşturmak",
+        "tur": "verb",
+        "ornek": "The captain asked the tower to clarify the runway assignment.",
+        "oncelik": 25,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "undertake": {
+        "anlam": "üstlenmek",
+        "tur": "verb",
+        "ornek": "Engineers plan to undertake a full redesign of the cooling system.",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "unprecedented": {
+        "anlam": "eşsiz",
+        "tur": "adj",
+        "ornek": "The development of supersonic flight was an unprecedented achievement in history.",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    }
+}
