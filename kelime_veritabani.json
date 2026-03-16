@@ -187,5 +187,57 @@
         "kullanim": "an unprecedented event/move",
         "ornek": "The development of supersonic flight was an unprecedented achievement in history.",
         "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
+    },
+
+    "turbulence": {
+        "anlam": "türbülans",
+        "tur": "noun",
+        "kullanim": "",
+        "ornek": "No example found.",
+        "oncelik": 100,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "aerodynamics": {
+        "anlam": "aerodinamik",
+        "tur": "noun",
+        "kullanim": "",
+        "ornek": "No example found.",
+        "oncelik": 100,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "fuselage": {
+        "anlam": "gövde",
+        "tur": "noun",
+        "kullanim": "",
+        "ornek": "No example found.",
+        "oncelik": 100,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "thrust": {
+        "anlam": "itme",
+        "tur": "noun",
+        "kullanim": "",
+        "ornek": "Pierre was a master swordsman, and could parry the thrusts of lesser men with barely a thought.",
+        "oncelik": 100,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "cockpit": {
+        "anlam": "kokpit",
+        "tur": "noun",
+        "kullanim": "",
+        "ornek": "No example found.",
+        "oncelik": 100,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
     }
+    
 }
