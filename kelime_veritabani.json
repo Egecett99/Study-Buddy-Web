@@ -1,0 +1,218 @@
+{
+    "propulsion": {
+        "anlam": "itki",
+        "tur": "noun",
+        "oncelik": 25,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "altitude": {
+        "anlam": "irtifa",
+        "tur": "noun",
+        "oncelik": 25,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "velocity": {
+        "anlam": "hız",
+        "tur": "noun",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "inspect": {
+        "anlam": "denetlemek",
+        "tur": "verb",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "substantial": {
+        "anlam": "önemli",
+        "tur": "adj",
+        "oncelik": 25,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "ambiguous": {
+        "anlam": "belirsiz",
+        "tur": "adj",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "comprehensive": {
+        "anlam": "kapsamlı",
+        "tur": "adj",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "feasible": {
+        "anlam": "mümkün",
+        "tur": "adj",
+        "oncelik": 105,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "incentive": {
+        "anlam": "teşvik",
+        "tur": "noun",
+        "oncelik": 40,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "interpret": {
+        "anlam": "yorumlamak",
+        "tur": "verb",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "implementation": {
+        "anlam": "uygulama",
+        "tur": "noun",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "consistent": {
+        "anlam": "tutarlı",
+        "tur": "adj",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "fundamental": {
+        "anlam": "temel",
+        "tur": "adj",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "fluctuate": {
+        "anlam": "dalgalanmak",
+        "tur": "verb",
+        "oncelik": 40,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "precise": {
+        "anlam": "kesin",
+        "tur": "adj",
+        "oncelik": 25,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "incorporate": {
+        "anlam": "dahil etmek",
+        "tur": "verb",
+        "oncelik": 110,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "discrepancy": {
+        "anlam": "tutarsızlık",
+        "tur": "noun",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "vulnerable": {
+        "anlam": "hassas",
+        "tur": "adj",
+        "oncelik": 40,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "mitigate": {
+        "anlam": "hafifletmek",
+        "tur": "verb",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "inherent": {
+        "anlam": "doğasında olan",
+        "tur": "adj",
+        "oncelik": 25,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "empirical": {
+        "anlam": "deneye dayalı",
+        "tur": "adj",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "facilitate": {
+        "anlam": "kolaylaştırmak",
+        "tur": "verb",
+        "oncelik": 65,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "constraint": {
+        "anlam": "kısıtlama",
+        "tur": "noun",
+        "oncelik": 55,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "acquire": {
+        "anlam": "edinmek",
+        "tur": "verb",
+        "oncelik": 25,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "clarify": {
+        "anlam": "açıklığa kavuşturmak",
+        "tur": "verb",
+        "oncelik": 25,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "undertake": {
+        "anlam": "üstlenmek",
+        "tur": "verb",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    },
+    "unprecedented": {
+        "anlam": "eşsiz",
+        "tur": "adj",
+        "oncelik": 10,
+        "sorulma": 0,
+        "dogru": 0,
+        "yanlis": 0
+    }
+}
