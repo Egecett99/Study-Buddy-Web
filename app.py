@@ -33,6 +33,7 @@ kelime_veritabani = load_web_data()
 st.title("🚀 Aerospace English Mastery (v6.0)")
 # ... (Seviye seçimi, test mantığı vb.)
 
+
 # --- SİSTEM AYARLARI ---
 st.set_page_config(page_title="Study-Buddy v4.2", page_icon="✈️")
 translator = Translator()
