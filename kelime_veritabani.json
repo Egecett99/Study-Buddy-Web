@@ -2,6 +2,7 @@
     "propulsion": {
         "anlam": "itki",
         "tur": "noun",
+        "ornek": "The rocket's propulsion system must generate enough thrust to overcome gravity.",
         "oncelik": 25,
         "sorulma": 0,
         "dogru": 0,
@@ -10,6 +11,7 @@
     "altitude": {
         "anlam": "irtifa",
         "tur": "noun",
+        "ornek": "The pilot was instructed to maintain an altitude of 35,000 feet.",
         "oncelik": 25,
         "sorulma": 0,
         "dogru": 0,
@@ -18,6 +20,7 @@
     "velocity": {
         "anlam": "hız",
         "tur": "noun",
+        "ornek": "Airspeed indicators show the velocity of the aircraft relative to the air.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -26,6 +29,7 @@
     "inspect": {
         "anlam": "denetlemek",
         "tur": "verb",
+        "ornek": "Engineers must inspect the fuselage for any signs of metal fatigue after long flights.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -34,6 +38,7 @@
     "substantial": {
         "anlam": "önemli",
         "tur": "adj",
+        "ornek": "Using lightweight materials provides a substantial increase in fuel efficiency.",
         "oncelik": 25,
         "sorulma": 0,
         "dogru": 0,
@@ -42,6 +47,7 @@
     "ambiguous": {
         "anlam": "belirsiz",
         "tur": "adj",
+        "ornek": "Ambiguous instructions from the control tower can lead to dangerous situations.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -50,6 +56,7 @@
     "comprehensive": {
         "anlam": "kapsamlı",
         "tur": "adj",
+        "ornek": "The technician performed a comprehensive safety check on the landing gear.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -58,6 +65,7 @@
     "feasible": {
         "anlam": "mümkün",
         "tur": "adj",
+        "ornek": "Building a lunar base is becoming more feasible with modern aerospace technology.",
         "oncelik": 105,
         "sorulma": 0,
         "dogru": 0,
@@ -66,6 +74,7 @@
     "incentive": {
         "anlam": "teşvik",
         "tur": "noun",
+        "ornek": "Government grants provide a strong incentive for companies to develop green fuels.",
         "oncelik": 40,
         "sorulma": 0,
         "dogru": 0,
@@ -74,6 +83,7 @@
     "interpret": {
         "anlam": "yorumlamak",
         "tur": "verb",
+        "ornek": "The flight computer must accurately interpret data from the pitot tubes.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -82,6 +92,7 @@
     "implementation": {
         "anlam": "uygulama",
         "tur": "noun",
+        "ornek": "The implementation of new radar systems significantly improved air traffic safety.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -90,6 +101,7 @@
     "consistent": {
         "anlam": "tutarlı",
         "tur": "adj",
+        "ornek": "Consistent maintenance is the most important factor in aircraft longevity.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -98,6 +110,7 @@
     "fundamental": {
         "anlam": "temel",
         "tur": "adj",
+        "ornek": "Lift, weight, thrust, and drag are the fundamental forces of flight.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -106,6 +119,7 @@
     "fluctuate": {
         "anlam": "dalgalanmak",
         "tur": "verb",
+        "ornek": "Cabin pressure may fluctuate slightly during a rapid climb or descent.",
         "oncelik": 40,
         "sorulma": 0,
         "dogru": 0,
@@ -114,6 +128,7 @@
     "precise": {
         "anlam": "kesin",
         "tur": "adj",
+        "ornek": "Aerospace manufacturing requires precise measurements to ensure part compatibility.",
         "oncelik": 25,
         "sorulma": 0,
         "dogru": 0,
@@ -122,6 +137,7 @@
     "incorporate": {
         "anlam": "dahil etmek",
         "tur": "verb",
+        "ornek": "New jet engines incorporate advanced noise-reduction technology.",
         "oncelik": 110,
         "sorulma": 0,
         "dogru": 0,
@@ -130,6 +146,7 @@
     "discrepancy": {
         "anlam": "tutarsızlık",
         "tur": "noun",
+        "ornek": "The pilot noticed a discrepancy between the analog and digital altimeters.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -138,6 +155,7 @@
     "vulnerable": {
         "anlam": "hassas",
         "tur": "adj",
+        "ornek": "Unshielded electronics are vulnerable to solar radiation in high-altitude flight.",
         "oncelik": 40,
         "sorulma": 0,
         "dogru": 0,
@@ -146,6 +164,7 @@
     "mitigate": {
         "anlam": "hafifletmek",
         "tur": "verb",
+        "ornek": "Vibration dampers are used to mitigate the stress on the wing structure.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -154,6 +173,7 @@
     "inherent": {
         "anlam": "doğasında olan",
         "tur": "adj",
+        "ornek": "Stability is an inherent quality of well-designed aircraft wings.",
         "oncelik": 25,
         "sorulma": 0,
         "dogru": 0,
@@ -162,6 +182,7 @@
     "empirical": {
         "anlam": "deneye dayalı",
         "tur": "adj",
+        "ornek": "Wind tunnel tests provide empirical data to support theoretical aerodynamic models.",
         "oncelik": 10,
         "sorulma": 0,
         "dogru": 0,
@@ -170,49 +191,4 @@
     "facilitate": {
         "anlam": "kolaylaştırmak",
         "tur": "verb",
-        "oncelik": 65,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
-    },
-    "constraint": {
-        "anlam": "kısıtlama",
-        "tur": "noun",
-        "oncelik": 55,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
-    },
-    "acquire": {
-        "anlam": "edinmek",
-        "tur": "verb",
-        "oncelik": 25,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
-    },
-    "clarify": {
-        "anlam": "açıklığa kavuşturmak",
-        "tur": "verb",
-        "oncelik": 25,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
-    },
-    "undertake": {
-        "anlam": "üstlenmek",
-        "tur": "verb",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
-    },
-    "unprecedented": {
-        "anlam": "eşsiz",
-        "tur": "adj",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
-    }
-}
+        "ornek": "Fly-by-wire systems facilitate better control over complex
