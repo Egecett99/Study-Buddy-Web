@@ -2,246 +2,190 @@
     "propulsion": {
         "anlam": "itki",
         "tur": "noun",
+        "kullanim": "jet/rocket propulsion",
         "ornek": "The rocket's propulsion system must generate enough thrust to overcome gravity.",
-        "oncelik": 25,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 25, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "altitude": {
         "anlam": "irtifa",
         "tur": "noun",
+        "kullanim": "at an altitude of",
         "ornek": "The pilot was instructed to maintain an altitude of 35,000 feet.",
-        "oncelik": 25,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 25, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "velocity": {
         "anlam": "hız",
         "tur": "noun",
+        "kullanim": "terminal/angular velocity",
         "ornek": "Airspeed indicators show the velocity of the aircraft relative to the air.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "inspect": {
         "anlam": "denetlemek",
         "tur": "verb",
+        "kullanim": "inspect for something",
         "ornek": "Engineers must inspect the fuselage for any signs of metal fatigue after long flights.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "substantial": {
         "anlam": "önemli",
         "tur": "adj",
+        "kullanim": "a substantial amount/increase",
         "ornek": "Using lightweight materials provides a substantial increase in fuel efficiency.",
-        "oncelik": 25,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 25, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "ambiguous": {
         "anlam": "belirsiz",
         "tur": "adj",
+        "kullanim": "ambiguous instructions/data",
         "ornek": "Ambiguous instructions from the control tower can lead to dangerous situations.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "comprehensive": {
         "anlam": "kapsamlı",
         "tur": "adj",
+        "kullanim": "comprehensive study/report",
         "ornek": "The technician performed a comprehensive safety check on the landing gear.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "feasible": {
         "anlam": "mümkün",
         "tur": "adj",
+        "kullanim": "economically/technically feasible",
         "ornek": "Building a lunar base is becoming more feasible with modern aerospace technology.",
-        "oncelik": 105,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 105, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "incentive": {
         "anlam": "teşvik",
         "tur": "noun",
+        "kullanim": "incentive for/to do something",
         "ornek": "Government grants provide a strong incentive for companies to develop green fuels.",
-        "oncelik": 40,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 40, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "interpret": {
         "anlam": "yorumlamak",
         "tur": "verb",
+        "kullanim": "interpret as something",
         "ornek": "The flight computer must accurately interpret data from the pitot tubes.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "implementation": {
         "anlam": "uygulama",
         "tur": "noun",
+        "kullanim": "implementation of a policy/system",
         "ornek": "The implementation of new radar systems significantly improved air traffic safety.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "consistent": {
         "anlam": "tutarlı",
         "tur": "adj",
         "kullanim": "consistent with something",
         "ornek": "Consistent maintenance is the most important factor in aircraft longevity.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "fundamental": {
         "anlam": "temel",
         "tur": "adj",
+        "kullanim": "fundamental to something",
         "ornek": "Lift, weight, thrust, and drag are the fundamental forces of flight.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "fluctuate": {
         "anlam": "dalgalanmak",
         "tur": "verb",
+        "kullanim": "fluctuate between A and B",
         "ornek": "Cabin pressure may fluctuate slightly during a rapid climb or descent.",
-        "oncelik": 40,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 40, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "precise": {
         "anlam": "kesin",
         "tur": "adj",
+        "kullanim": "precise measurement/detail",
         "ornek": "Aerospace manufacturing requires precise measurements to ensure part compatibility.",
-        "oncelik": 25,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 25, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "incorporate": {
         "anlam": "dahil etmek",
         "tur": "verb",
+        "kullanim": "incorporate into something",
         "ornek": "New jet engines incorporate advanced noise-reduction technology.",
-        "oncelik": 110,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 110, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "discrepancy": {
         "anlam": "tutarsızlık",
         "tur": "noun",
+        "kullanim": "discrepancy between A and B",
         "ornek": "The pilot noticed a discrepancy between the analog and digital altimeters.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "vulnerable": {
         "anlam": "hassas",
         "tur": "adj",
+        "kullanim": "vulnerable to something",
         "ornek": "Unshielded electronics are vulnerable to solar radiation in high-altitude flight.",
-        "oncelik": 40,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 40, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "mitigate": {
         "anlam": "hafifletmek",
         "tur": "verb",
+        "kullanim": "mitigate the effects/impact",
         "ornek": "Vibration dampers are used to mitigate the stress on the wing structure.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "inherent": {
         "anlam": "doğasında olan",
         "tur": "adj",
         "kullanim": "inherent in something",
         "ornek": "Stability is an inherent quality of well-designed aircraft wings.",
-        "oncelik": 25,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 25, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "empirical": {
         "anlam": "deneye dayalı",
         "tur": "adj",
+        "kullanim": "empirical evidence/data",
         "ornek": "Wind tunnel tests provide empirical data to support theoretical aerodynamic models.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "facilitate": {
         "anlam": "kolaylaştırmak",
         "tur": "verb",
+        "kullanim": "facilitate the process/development",
         "ornek": "Fly-by-wire systems facilitate better control over complex maneuvers.",
-        "oncelik": 65,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 65, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "constraint": {
         "anlam": "kısıtlama",
         "tur": "noun",
+        "kullanim": "constraint on something",
         "ornek": "Fuel capacity is a major constraint for long-range space missions.",
-        "oncelik": 55,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 55, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "acquire": {
         "anlam": "edinmek",
         "tur": "verb",
+        "kullanim": "acquire knowledge/skills",
         "ornek": "Pilots must acquire a specific license before flying multi-engine aircraft.",
-        "oncelik": 25,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 25, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "clarify": {
         "anlam": "açıklığa kavuşturmak",
         "tur": "verb",
+        "kullanim": "clarify a point/situation",
         "ornek": "The captain asked the tower to clarify the runway assignment.",
-        "oncelik": 25,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 25, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "undertake": {
         "anlam": "üstlenmek",
         "tur": "verb",
+        "kullanim": "undertake a task/project",
         "ornek": "Engineers plan to undertake a full redesign of the cooling system.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     },
     "unprecedented": {
         "anlam": "eşsiz",
         "tur": "adj",
+        "kullanim": "an unprecedented event/move",
         "ornek": "The development of supersonic flight was an unprecedented achievement in history.",
-        "oncelik": 10,
-        "sorulma": 0,
-        "dogru": 0,
-        "yanlis": 0
+        "oncelik": 10, "sorulma": 0, "dogru": 0, "yanlis": 0
     }
 }
