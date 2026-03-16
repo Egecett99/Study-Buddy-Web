@@ -5,8 +5,7 @@ import os
 from gtts import gTTS
 import io
 
-# Sayfa Ayarları
-st.set_page_config(page_title="Study-Buddy v3.9.4", page_icon="✈️")
+st.set_page_config(page_title="Study-Buddy v3.9.5", page_icon="✈️")
 
 # --- CSS: MODERN PILOT UI ---
 st.markdown("""
@@ -14,10 +13,10 @@ st.markdown("""
     .main { background-color: #101010; color: #00e676; }
     .stButton>button { width: 100%; background-color: #212121; color: #00e676; border: 1px solid #00e676; border-radius: 8px; font-weight: bold; }
     .stTextInput>div>div>input { background-color: #1a1a1a; color: white; border: 1px solid #00e676; border-radius: 8px; }
-    h1 { color: #00e676 !important; text-align: center; }
-    .word-type { color: #757575; font-style: italic; font-size: 18px; text-align: center; margin-top: -15px; margin-bottom: 20px; }
-    /* Audio Player'ı karanlık temaya uydurma */
-    audio { width: 100%; height: 45px; margin-bottom: 20px; border-radius: 10px; filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) invert(1); }
+    h1 { color: #00e676 !important; text-align: center; margin-bottom: 5px; }
+    .word-info { color: #757575; font-size: 16px; text-align: center; margin-top: -10px; margin-bottom: 20px; }
+    .usage-tag { color: #ffa726; font-weight: bold; border: 1px solid #ffa726; padding: 2px 6px; border-radius: 4px; margin-left: 10px; font-size: 14px; }
+    audio { width: 100%; height: 45px; margin-bottom: 20px; border-radius: 10px; filter: invert(1); }
     </style>
     """, unsafe_allow_html=True)
 
@@ -44,22 +43,25 @@ def soru_belirle():
 if st.session_state.secilen == "":
     soru_belirle()
 
-st.title("✈️ PILOT AUDIO v3.9.4")
+st.title("✈️ PILOT DASHBOARD v3.9.5")
 st.write(f"📊 **Skor:** {st.session_state.dogru} / {st.session_state.yanlis} | 📦 **Pool:** {len(st.session_state.aktif_havuz)}")
 
 hedef = st.session_state.kelime_listesi[st.session_state.secilen]
 st.markdown(f"<h1>{st.session_state.secilen.upper()}</h1>", unsafe_allow_html=True)
-st.markdown(f"<p class='word-type'>({hedef.get('tur', 'unknown')})</p>", unsafe_allow_html=True)
 
-# --- 🔊 SAFARI-SAFE AUDIO ENGINE ---
+# --- WORD INFO LINE (Type + Usage) ---
+kullanim = hedef.get('kullanim', '')
+usage_html = f"<span class='usage-tag'>Usage: {kullanim}</span>" if kullanim else ""
+st.markdown(f"<div class='word-info'>({hedef.get('tur', 'unknown')}) {usage_html}</div>", unsafe_allow_html=True)
+
+# Audio Engine
 try:
     tts = gTTS(text=st.session_state.secilen, lang='en')
     audio_bytes = io.BytesIO()
     tts.write_to_fp(audio_bytes)
-    # getvalue() kullanarak doğrudan veriyi Safari'ye paslıyoruz
     st.audio(audio_bytes.getvalue(), format="audio/mpeg")
 except:
-    st.warning("⚠️ Audio engine warming up... Please refresh if error persists.")
+    st.warning("⚠️ Audio engine warming up...")
 
 if st.session_state.last_result:
     if st.session_state.last_result.startswith("✅"):
@@ -82,11 +84,11 @@ def handle_submit():
         st.session_state.last_result = f"❌ YANLIŞ! Doğrusu: {correct_ans.upper()}"
     soru_belirle()
 
-with st.form(key='final_audio_form', clear_on_submit=True):
+with st.form(key='colloc_form', clear_on_submit=True):
     st.text_input("Meaning:", key="ans_input")
     st.form_submit_button(label='CHECK ANSWER', on_click=handle_submit)
 
-with st.expander("💡 HINT"):
+with st.expander("💡 HINT (Example Sentence)"):
     st.write(hedef.get('ornek', 'No example sentence.'))
 
 if st.button("NEXT WORD ➡️"):
