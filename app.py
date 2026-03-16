@@ -1,131 +1,137 @@
 import sys
+# Python 3.14 CGI Yaması
 try:
     import cgi
 except ImportError:
-    import legacy_cgi as cgi
-    sys.modules["cgi"] = cgi
-import streamlit as st
+    try:
+        import legacy_cgi as cgi
+        sys.modules["cgi"] = cgi
+    except ImportError:
+        pass
+
 import streamlit as st
 import json
 import random
-import os
-from gtts import gTTS
 import io
 import pandas as pd
+from gtts import gTTS
 from googletrans import Translator
 
 # --- SİSTEM AYARLARI ---
-st.set_page_config(page_title="Study-Buddy AI", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="Study-Buddy v4.0", page_icon="✈️")
 translator = Translator()
 
 # --- CSS: PILOT UI ---
 st.markdown("""
     <style>
     .main { background-color: #0e1117; color: #00e676; }
-    .stButton>button { width: 100%; border-radius: 10px; font-weight: bold; }
-    .report-card { background-color: #161b22; padding: 20px; border-radius: 15px; border: 1px solid #00e676; }
-    h1 { text-align: center; color: #00e676; }
+    .stButton>button { width: 100%; border-radius: 8px; font-weight: bold; border: 1px solid #00e676; }
+    .stTextArea>div>div>textarea { background-color: #1a1a1a; color: white; border: 1px solid #00e676; }
+    .word-header { text-align: center; color: #00e676; font-size: 50px; margin-bottom: 0px; }
+    .word-info { text-align: center; color: #888; margin-top: -10px; margin-bottom: 20px; }
     </style>
     """, unsafe_allow_html=True)
 
-# --- SESSION INITIALIZATION ---
-if 'user_pool' not in st.session_state:
-    st.session_state.user_pool = {}
-    st.session_state.dogru = 0
-    st.session_state.yanlis = 0
-    st.session_state.secilen = ""
-    st.session_state.last_result = None
-    st.session_state.gecmis = []
-    st.session_state.app_mode = "setup" # setup veya flight
+# --- VERİ YÜKLEME (SENİN LİSTEN) ---
+def load_fixed_data():
+    try:
+        with open("kelime_veritabani.json", "r", encoding="utf-8") as f:
+            return json.load(f)
+    except:
+        return {"aerodynamics": {"anlam": "aerodinamik", "tur": "noun", "ornek": "Aerodynamics is key in aviation.", "kullanim": "high speed"}}
 
-# --- AI DATA GENERATOR ---
-def process_raw_list(text):
+# --- AI KELİME ANALİZCİSİ (KULLANICI LİSTESİ İÇİN) ---
+def process_user_list(text):
     words = [w.strip() for w in text.replace(',', '\n').split('\n') if w.strip()]
     processed = {}
-    progress_bar = st.progress(0)
-    
+    bar = st.progress(0)
     for i, word in enumerate(words):
         try:
-            # Otomatik Anlam ve Bilgi Çekme
-            tr_meaning = translator.translate(word, src='en', dest='tr').text.lower()
+            # AI burada devreye giriyor
+            tr = translator.translate(word, src='en', dest='tr').text.lower()
             processed[word.lower()] = {
-                "anlam": tr_meaning,
+                "anlam": tr,
                 "tur": "detected",
-                "kullanim": "",
-                "ornek": f"AI generated sentence for {word}.",
-                "oncelik": 100
+                "ornek": f"Automated sentence for {word}.",
+                "kullanim": "N/A"
             }
-        except:
-            continue
-        progress_bar.progress((i + 1) / len(words))
+        except: continue
+        bar.progress((i + 1) / len(words))
     return processed
 
-# --- SETUP SCREEN ---
-if st.session_state.app_mode == "setup":
-    st.title("🛫 FLIGHT PREPARATION")
-    st.subheader("Kelime Listeni Yapıştır (Virgül veya Alt Alta)")
-    
-    raw_input = st.text_area("Örn: propulsion, velocity, thrust...", height=150)
-    
-    if st.button("🚀 ANALİZ ET VE UÇUŞA BAŞLA"):
-        if raw_input:
-            with st.spinner("AI Kelimeleri Analiz Ediyor..."):
-                st.session_state.user_pool = process_raw_list(raw_input)
-                st.session_state.app_mode = "flight"
-                st.rerun()
-        else:
-            st.error("Lütfen en az bir kelime yaz!")
+# --- SESSION STATE ---
+if 'mode' not in st.session_state:
+    st.session_state.mode = "menu" # menu, flight, report
+    st.session_state.active_pool = {}
+    st.session_state.secilen = ""
+    st.session_state.dogru = 0
+    st.session_state.yanlis = 0
+    st.session_state.gecmis = []
 
-# --- FLIGHT SCREEN (THE TEST) ---
-else:
-    if not st.session_state.secilen:
-        st.session_state.secilen = random.choice(list(st.session_state.user_pool.keys()))
-
-    st.title("✈️ IN-FLIGHT TEST")
+# --- MENU EKRANI ---
+if st.session_state.mode == "menu":
+    st.title("👨‍✈️ FLIGHT SELECTOR")
+    col1, col2 = st.columns(2)
     
-    # Kelime Kartı
-    word_data = st.session_state.user_pool[st.session_state.secilen]
-    st.markdown(f"<h1 style='font-size: 60px;'>{st.session_state.secilen.upper()}</h1>", unsafe_allow_html=True)
-    
-    # Audio
-    tts = gTTS(text=st.session_state.secilen, lang='en')
-    fp = io.BytesIO()
-    tts.write_to_fp(fp)
-    st.audio(fp.getvalue(), format="audio/mpeg")
-
-    # Form
-    with st.form(key='answer_form', clear_on_submit=True):
-        ans = st.text_input("Türkçe Anlamı:")
-        submit = st.form_submit_button("KONTROL ET")
-        
-        if submit:
-            correct = word_data['anlam']
-            if ans.strip().lower() == correct:
-                st.session_state.dogru += 1
-                st.session_state.last_result = f"✅ DOĞRU! ({correct})"
-                st.balloons()
-            else:
-                st.session_state.yanlis += 1
-                st.session_state.last_result = f"❌ YANLIŞ! Doğrusu: {correct.upper()}"
-            
-            st.session_state.gecmis.append({"Kelime": st.session_state.secilen, "Sonuç": st.session_state.last_result})
-            st.session_state.secilen = random.choice(list(st.session_state.user_pool.keys()))
+    with col1:
+        st.subheader("📦 Sabit Liste")
+        st.write("Senin hazırladığın profesyonel kelime havuzu.")
+        if st.button("SABİT LİSTE İLE BAŞLA"):
+            st.session_state.active_pool = load_fixed_data()
+            st.session_state.mode = "flight"
             st.rerun()
 
-    if st.session_state.last_result:
-        st.info(st.session_state.last_result)
+    with col2:
+        st.subheader("📝 Kendi Listem")
+        user_input = st.text_area("Kelimeleri buraya yapıştır:", placeholder="thrust, drag, lift...")
+        if st.button("KENDİ LİSTEMİ OLUŞTUR"):
+            if user_input:
+                st.session_state.active_pool = process_user_list(user_input)
+                st.session_state.mode = "flight"
+                st.rerun()
+            else: st.warning("Önce kelime ekle!")
 
-    if st.button("🏁 UÇUŞU BİTİR VE RAPORU GÖR"):
-        st.session_state.app_mode = "report"
+# --- FLIGHT (TEST) EKRANI ---
+elif st.session_state.mode == "flight":
+    if not st.session_state.secilen:
+        st.session_state.secilen = random.choice(list(st.session_state.active_pool.keys()))
+    
+    target = st.session_state.active_pool[st.session_state.secilen]
+    
+    st.markdown(f"<div class='word-header'>{st.session_state.secilen.upper()}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='word-info'>({target['tur']}) | {target.get('kullanim', '')}</div>", unsafe_allow_html=True)
+
+    # Ses
+    tts = gTTS(text=st.session_state.secilen, lang='en')
+    b = io.BytesIO(); tts.write_to_fp(b)
+    st.audio(b.getvalue())
+
+    with st.form(key='q', clear_on_submit=True):
+        ans = st.text_input("Anlamı nedir?")
+        if st.form_submit_button("KONTROL ET"):
+            correct = target['anlam'].lower()
+            res = "✅ DOĞRU" if ans.strip().lower() == correct else "❌ YANLIŞ"
+            st.session_state.gecmis.append({"Kelime": st.session_state.secilen, "Senin": ans, "Doğru": correct, "Sonuç": res})
+            
+            if "✅" in res: st.session_state.dogru += 1
+            else: st.session_state.yanlis += 1
+            
+            st.session_state.secilen = random.choice(list(st.session_state.active_pool.keys()))
+            st.rerun()
+
+    with st.expander("💡 İPUCU (Örnek Cümle)"):
+        st.write(target['ornek'])
+
+    if st.button("🏁 UÇUŞU BİTİR"):
+        st.session_state.mode = "report"
         st.rerun()
 
-# --- REPORT SCREEN ---
-if st.session_state.app_mode == "report":
+# --- RAPOR EKRANI ---
+else:
     st.title("🛬 FLIGHT LOG")
-    df = pd.DataFrame(st.session_state.gecmis)
-    st.table(df)
-    if st.button("🔄 YENİ LİSTE EKLE"):
-        st.session_state.app_mode = "setup"
+    st.table(pd.DataFrame(st.session_state.gecmis))
+    if st.button("🔄 ANA MENÜYE DÖN"):
+        st.session_state.mode = "menu"
+        st.session_state.secilen = ""
         st.session_state.gecmis = []
-        st.session_state.user_pool = {}
         st.rerun()
