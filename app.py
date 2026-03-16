@@ -1,3 +1,10 @@
+import sys
+try:
+    import cgi
+except ImportError:
+    import legacy_cgi as cgi
+    sys.modules["cgi"] = cgi
+import streamlit as st
 import streamlit as st
 import json
 import random
