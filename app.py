@@ -1,4 +1,5 @@
 import sys
+import requests
 # Python 3.14 CGI Yaması
 try:
     import cgi
@@ -18,27 +19,20 @@ from gtts import gTTS
 from googletrans import Translator
 
 # --- SİSTEM AYARLARI ---
-st.set_page_config(page_title="Study-Buddy v4.0", page_icon="✈️")
+st.set_page_config(page_title="Study-Buddy v4.1", page_icon="✈️", layout="centered")
 translator = Translator()
 
 # --- CSS: PILOT UI ---
 st.markdown("""
     <style>
     .main { background-color: #0e1117; color: #00e676; }
-    .stButton>button { width: 100%; border-radius: 8px; font-weight: bold; border: 1px solid #00e676; }
+    .stButton>button { width: 100%; border-radius: 8px; font-weight: bold; border: 1px solid #00e676; height: 3em; }
     .stTextArea>div>div>textarea { background-color: #1a1a1a; color: white; border: 1px solid #00e676; }
-    .word-header { text-align: center; color: #00e676; font-size: 50px; margin-bottom: 0px; }
-    .word-info { text-align: center; color: #888; margin-top: -10px; margin-bottom: 20px; }
+    .word-header { text-align: center; color: #00e676; font-size: 55px; font-weight: bold; margin-bottom: 0px; text-shadow: 2px 2px 10px rgba(0,230,118,0.3); }
+    .word-info { text-align: center; color: #888; margin-top: -10px; margin-bottom: 20px; font-style: italic; }
+    .result-box { padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px; font-weight: bold; }
     </style>
     """, unsafe_allow_html=True)
-
-# --- VERİ YÜKLEME (SENİN LİSTEN) ---
-def load_fixed_data():
-    try:
-        with open("kelime_veritabani.json", "r", encoding="utf-8") as f:
-            return json.load(f)
-    except:
-        return {"aerodynamics": {"anlam": "aerodinamik", "tur": "noun", "ornek": "Aerodynamics is key in aviation.", "kullanim": "high speed"}}
 
 # --- AI KELİME ANALİZCİSİ (KULLANICI LİSTESİ İÇİN) ---
 def process_user_list(text):
@@ -47,49 +41,66 @@ def process_user_list(text):
     bar = st.progress(0)
     for i, word in enumerate(words):
         try:
-            # AI burada devreye giriyor
+            # 1. Anlam
             tr = translator.translate(word, src='en', dest='tr').text.lower()
+            # 2. Tür ve Örnek Cümle (Dictionary API)
+            dict_url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
+            response = requests.get(dict_url, timeout=5)
+            w_type = "noun"
+            example = f"Study hard to master the word '{word}'."
+            if response.status_code == 200:
+                data = response.json()[0]
+                w_type = data['meanings'][0]['partOfSpeech']
+                for m in data['meanings']:
+                    for d in m['definitions']:
+                        if 'example' in d:
+                            example = d['example']
+                            break
+                    if example != f"Study hard to master the word '{word}'.": break
+            
             processed[word.lower()] = {
                 "anlam": tr,
-                "tur": "detected",
-                "ornek": f"Automated sentence for {word}.",
-                "kullanim": "N/A"
+                "tur": w_type,
+                "ornek": example,
+                "kullanim": "Common Usage"
             }
-        except: continue
+        except:
+            processed[word.lower()] = {"anlam": word, "tur": "unknown", "ornek": "Details not found.", "kullanim": "N/A"}
         bar.progress((i + 1) / len(words))
     return processed
 
 # --- SESSION STATE ---
 if 'mode' not in st.session_state:
-    st.session_state.mode = "menu" # menu, flight, report
+    st.session_state.mode = "menu"
     st.session_state.active_pool = {}
     st.session_state.secilen = ""
     st.session_state.dogru = 0
     st.session_state.yanlis = 0
     st.session_state.gecmis = []
+    st.session_state.last_result = None
 
 # --- MENU EKRANI ---
 if st.session_state.mode == "menu":
-    st.title("👨‍✈️ FLIGHT SELECTOR")
+    st.title("👨‍✈️ PILOT SELECTION MENU")
     col1, col2 = st.columns(2)
-    
     with col1:
-        st.subheader("📦 Sabit Liste")
-        st.write("Senin hazırladığın profesyonel kelime havuzu.")
-        if st.button("SABİT LİSTE İLE BAŞLA"):
-            st.session_state.active_pool = load_fixed_data()
-            st.session_state.mode = "flight"
-            st.rerun()
-
-    with col2:
-        st.subheader("📝 Kendi Listem")
-        user_input = st.text_area("Kelimeleri buraya yapıştır:", placeholder="thrust, drag, lift...")
-        if st.button("KENDİ LİSTEMİ OLUŞTUR"):
-            if user_input:
-                st.session_state.active_pool = process_user_list(user_input)
+        st.subheader("📦 Main Database")
+        if st.button("START WITH FIXED POOL"):
+            try:
+                with open("kelime_veritabani.json", "r", encoding="utf-8") as f:
+                    st.session_state.active_pool = json.load(f)
                 st.session_state.mode = "flight"
                 st.rerun()
-            else: st.warning("Önce kelime ekle!")
+            except: st.error("Database file not found!")
+    with col2:
+        st.subheader("📝 Custom List")
+        user_input = st.text_area("Paste words:", placeholder="undertake, velocity, propulsion...")
+        if st.button("CREATE MY SESSION"):
+            if user_input:
+                with st.spinner("AI Analyzing words..."):
+                    st.session_state.active_pool = process_user_list(user_input)
+                    st.session_state.mode = "flight"
+                    st.rerun()
 
 # --- FLIGHT (TEST) EKRANI ---
 elif st.session_state.mode == "flight":
@@ -99,39 +110,56 @@ elif st.session_state.mode == "flight":
     target = st.session_state.active_pool[st.session_state.secilen]
     
     st.markdown(f"<div class='word-header'>{st.session_state.secilen.upper()}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='word-info'>({target['tur']}) | {target.get('kullanim', '')}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='word-info'>({target['tur']}) | {target.get('kullanim', 'Standard Usage')}</div>", unsafe_allow_html=True)
 
-    # Ses
+    # Audio
     tts = gTTS(text=st.session_state.secilen, lang='en')
     b = io.BytesIO(); tts.write_to_fp(b)
     st.audio(b.getvalue())
 
-    with st.form(key='q', clear_on_submit=True):
-        ans = st.text_input("Anlamı nedir?")
-        if st.form_submit_button("KONTROL ET"):
+    # Result Display
+    if st.session_state.last_result:
+        if "✅" in st.session_state.last_result:
+            st.success(st.session_state.last_result)
+        else:
+            st.error(st.session_state.last_result)
+            if st.button("⚠️ I actually knew this! (+1 Correct)"):
+                st.session_state.dogru += 1
+                st.session_state.yanlis -= 1
+                st.session_state.gecmis[-1]["Sonuç"] = "✅ DÜZELTİLDİ"
+                st.session_state.last_result = "✅ Score corrected!"
+                st.rerun()
+
+    with st.form(key='answer_form', clear_on_submit=True):
+        ans = st.text_input("What does it mean?")
+        if st.form_submit_button("CHECK"):
             correct = target['anlam'].lower()
-            res = "✅ DOĞRU" if ans.strip().lower() == correct else "❌ YANLIŞ"
-            st.session_state.gecmis.append({"Kelime": st.session_state.secilen, "Senin": ans, "Doğru": correct, "Sonuç": res})
+            if ans.strip().lower() == correct:
+                st.session_state.dogru += 1
+                st.session_state.last_result = f"✅ CORRECT! '{st.session_state.secilen}' = {correct.upper()}"
+            else:
+                st.session_state.yanlis += 1
+                st.session_state.last_result = f"❌ WRONG! Correct was: {correct.upper()}"
             
-            if "✅" in res: st.session_state.dogru += 1
-            else: st.session_state.yanlis += 1
-            
+            st.session_state.gecmis.append({"Word": st.session_state.secilen.upper(), "Result": st.session_state.last_result})
             st.session_state.secilen = random.choice(list(st.session_state.active_pool.keys()))
             st.rerun()
 
-    with st.expander("💡 İPUCU (Örnek Cümle)"):
-        st.write(target['ornek'])
+    with st.expander("💡 HINT (Example Sentence)"):
+        st.write(target.get('ornek', 'No sentence available.'))
 
-    if st.button("🏁 UÇUŞU BİTİR"):
+    if st.button("🏁 FINISH FLIGHT"):
         st.session_state.mode = "report"
         st.rerun()
 
 # --- RAPOR EKRANI ---
 else:
-    st.title("🛬 FLIGHT LOG")
+    st.title("🛬 FLIGHT SUMMARY")
+    st.write(f"📊 **Final Score:** {st.session_state.dogru} Correct / {st.session_state.yanlis} Wrong")
     st.table(pd.DataFrame(st.session_state.gecmis))
-    if st.button("🔄 ANA MENÜYE DÖN"):
+    if st.button("🔄 BACK TO MENU"):
         st.session_state.mode = "menu"
         st.session_state.secilen = ""
         st.session_state.gecmis = []
+        st.session_state.last_result = None
         st.rerun()
