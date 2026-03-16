@@ -6,7 +6,7 @@ from gtts import gTTS
 import io
 import pandas as pd
 
-st.set_page_config(page_title="Study-Buddy v3.9.7", page_icon="✈️")
+st.set_page_config(page_title="Study-Buddy v3.9.8", page_icon="✈️")
 
 # --- CSS: MODERN PILOT UI ---
 st.markdown("""
@@ -38,6 +38,7 @@ if 'kelime_listesi' not in st.session_state:
     st.session_state.last_result = None
     st.session_state.gecmis = []
     st.session_state.rapor_modu = False
+    st.session_state.last_word_data = None # Düzeltme için son kelimeyi tutar
 
 def soru_belirle():
     if not st.session_state.aktif_havuz:
@@ -50,7 +51,7 @@ if st.session_state.secilen == "" and not st.session_state.rapor_modu:
 
 # --- ANA EKRAN (SORU MODU) ---
 if not st.session_state.rapor_modu:
-    st.title("✈️ PILOT DASHBOARD v3.9.7")
+    st.title("✈️ PILOT DASHBOARD v3.9.8")
     st.write(f"📊 **Skor:** {st.session_state.dogru} / {st.session_state.yanlis}")
 
     hedef = st.session_state.kelime_listesi[st.session_state.secilen]
@@ -67,20 +68,37 @@ if not st.session_state.rapor_modu:
         tts.write_to_fp(audio_bytes)
         st.audio(audio_bytes.getvalue(), format="audio/mpeg")
     except:
-        st.warning("⚠️ Audio engine error. Please refresh.")
+        st.warning("⚠️ Audio engine error.")
 
+    # --- SONUÇ VE DÜZELTME ALANI ---
     if st.session_state.last_result:
         if st.session_state.last_result.startswith("✅"):
             st.success(st.session_state.last_result)
         else:
             st.error(st.session_state.last_result)
+            # Manuel Düzeltme Butonu (Sadece yanlış cevapta çıkar)
+            if st.button("⚠️ I actually knew this! (Correction)"):
+                st.session_state.dogru += 1
+                st.session_state.yanlis -= 1
+                # Son kaydı güncelle
+                if st.session_state.gecmis:
+                    st.session_state.gecmis[-1]["Durum"] = "✅ DÜZELTİLDİ"
+                
+                # Kelimeyi havuzdan çıkar (çünkü aslında bildi)
+                if st.session_state.last_word_data in st.session_state.aktif_havuz:
+                    st.session_state.aktif_havuz.remove(st.session_state.last_word_data)
+                
+                st.session_state.last_result = "✅ Correction applied!"
+                st.rerun()
 
     def handle_submit():
         user_ans = st.session_state.ans_input.strip().lower()
         if not user_ans: return
         correct_ans = hedef['anlam'].lower()
         
+        st.session_state.last_word_data = st.session_state.secilen # Düzeltme için sakla
         status = "✅ DOĞRU" if user_ans == correct_ans else "❌ YANLIŞ"
+        
         st.session_state.gecmis.append({
             "Kelime": st.session_state.secilen.upper(),
             "Senin Cevabın": user_ans,
@@ -98,13 +116,12 @@ if not st.session_state.rapor_modu:
             st.session_state.last_result = f"❌ YANLIŞ! Doğrusu: {correct_ans.upper()}"
         soru_belirle()
 
-    with st.form(key='main_form', clear_on_submit=True):
+    with st.form(key='fair_play_form', clear_on_submit=True):
         st.text_input("Meaning:", key="ans_input")
         st.form_submit_button(label='CHECK ANSWER', on_click=handle_submit)
 
-    # --- İPUCU BURADA (GERİ GELDİ) ---
-    with st.expander("💡 HINT (Example Sentence)"):
-        st.write(hedef.get('ornek', 'No example sentence for this word.'))
+    with st.expander("💡 HINT"):
+        st.write(hedef.get('ornek', 'No hint.'))
 
     st.markdown("---")
     col1, col2 = st.columns(2)
@@ -121,24 +138,18 @@ if not st.session_state.rapor_modu:
 # --- RAPOR EKRANI ---
 else:
     st.title("🛬 FLIGHT SUMMARY")
-    
-    if not st.session_state.gecmis:
-        st.warning("No words solved yet.")
-    else:
-        total = len(st.session_state.gecmis)
+    total = len(st.session_state.gecmis)
+    if total > 0:
         accuracy = (st.session_state.dogru / total) * 100
-        
         st.markdown(f"""
         <div class='report-card'>
             <h3>📈 Session Performance</h3>
             <p>Accuracy: <b>%{accuracy:.1f}</b></p>
-            <p>Words Mastered: <b style='color: #00e676;'>{st.session_state.dogru}</b></p>
-            <p>Needs Review: <b style='color: #ff5252;'>{st.session_state.yanlis}</b></p>
+            <p>Correct: <b style='color: #00e676;'>{st.session_state.dogru}</b> | Wrong: <b style='color: #ff5252;'>{st.session_state.yanlis}</b></p>
         </div>
         """, unsafe_allow_html=True)
         
-        df = pd.DataFrame(st.session_state.gecmis)
-        st.dataframe(df, use_container_width=True, hide_index=True)
+        st.dataframe(pd.DataFrame(st.session_state.gecmis), use_container_width=True, hide_index=True)
 
     if st.button("🔄 START NEW FLIGHT"):
         st.session_state.rapor_modu = False
