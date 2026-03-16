@@ -101,6 +101,7 @@
     "consistent": {
         "anlam": "tutarlı",
         "tur": "adj",
+        "kullanim": "consistent with something",
         "ornek": "Consistent maintenance is the most important factor in aircraft longevity.",
         "oncelik": 10,
         "sorulma": 0,
@@ -173,6 +174,7 @@
     "inherent": {
         "anlam": "doğasında olan",
         "tur": "adj",
+        "kullanim": "inherent in something",
         "ornek": "Stability is an inherent quality of well-designed aircraft wings.",
         "oncelik": 25,
         "sorulma": 0,
