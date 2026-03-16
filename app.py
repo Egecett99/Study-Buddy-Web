@@ -6,7 +6,7 @@ from gtts import gTTS
 import io
 import pandas as pd
 
-st.set_page_config(page_title="Study-Buddy v3.9.6", page_icon="✈️")
+st.set_page_config(page_title="Study-Buddy v3.9.7", page_icon="✈️")
 
 # --- CSS: MODERN PILOT UI ---
 st.markdown("""
@@ -18,7 +18,7 @@ st.markdown("""
     .word-info { color: #757575; font-size: 16px; text-align: center; margin-top: -10px; margin-bottom: 20px; }
     .usage-tag { color: #ffa726; font-weight: bold; border: 1px solid #ffa726; padding: 2px 6px; border-radius: 4px; margin-left: 10px; font-size: 14px; }
     audio { width: 100%; height: 45px; margin-bottom: 20px; border-radius: 10px; filter: invert(1); }
-    .report-card { background-color: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid #00e676; }
+    .report-card { background-color: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid #00e676; margin-bottom: 20px; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -28,7 +28,7 @@ def load_data():
             return json.load(f)
     return {}
 
-# --- SESSION STATE BAŞLATMA ---
+# --- SESSION STATE ---
 if 'kelime_listesi' not in st.session_state:
     st.session_state.kelime_listesi = load_data()
     st.session_state.aktif_havuz = list(st.session_state.kelime_listesi.keys())
@@ -36,8 +36,8 @@ if 'kelime_listesi' not in st.session_state:
     st.session_state.yanlis = 0
     st.session_state.secilen = ""
     st.session_state.last_result = None
-    st.session_state.gecmis = [] # Tur geçmişi için
-    st.session_state.rapor_modu = False # Raporu göstermek için
+    st.session_state.gecmis = []
+    st.session_state.rapor_modu = False
 
 def soru_belirle():
     if not st.session_state.aktif_havuz:
@@ -48,9 +48,9 @@ def soru_belirle():
 if st.session_state.secilen == "" and not st.session_state.rapor_modu:
     soru_belirle()
 
-# --- ANA ARAYÜZ ---
+# --- ANA EKRAN (SORU MODU) ---
 if not st.session_state.rapor_modu:
-    st.title("✈️ PILOT DASHBOARD v3.9.6")
+    st.title("✈️ PILOT DASHBOARD v3.9.7")
     st.write(f"📊 **Skor:** {st.session_state.dogru} / {st.session_state.yanlis}")
 
     hedef = st.session_state.kelime_listesi[st.session_state.secilen]
@@ -67,7 +67,7 @@ if not st.session_state.rapor_modu:
         tts.write_to_fp(audio_bytes)
         st.audio(audio_bytes.getvalue(), format="audio/mpeg")
     except:
-        st.warning("⚠️ Audio engine warming up...")
+        st.warning("⚠️ Audio engine error. Please refresh.")
 
     if st.session_state.last_result:
         if st.session_state.last_result.startswith("✅"):
@@ -81,8 +81,6 @@ if not st.session_state.rapor_modu:
         correct_ans = hedef['anlam'].lower()
         
         status = "✅ DOĞRU" if user_ans == correct_ans else "❌ YANLIŞ"
-        
-        # Geçmişe kaydet
         st.session_state.gecmis.append({
             "Kelime": st.session_state.secilen.upper(),
             "Senin Cevabın": user_ans,
@@ -100,10 +98,15 @@ if not st.session_state.rapor_modu:
             st.session_state.last_result = f"❌ YANLIŞ! Doğrusu: {correct_ans.upper()}"
         soru_belirle()
 
-    with st.form(key='report_form', clear_on_submit=True):
+    with st.form(key='main_form', clear_on_submit=True):
         st.text_input("Meaning:", key="ans_input")
         st.form_submit_button(label='CHECK ANSWER', on_click=handle_submit)
 
+    # --- İPUCU BURADA (GERİ GELDİ) ---
+    with st.expander("💡 HINT (Example Sentence)"):
+        st.write(hedef.get('ornek', 'No example sentence for this word.'))
+
+    st.markdown("---")
     col1, col2 = st.columns(2)
     with col1:
         if st.button("NEXT WORD ➡️"):
@@ -115,28 +118,25 @@ if not st.session_state.rapor_modu:
             st.session_state.rapor_modu = True
             st.rerun()
 
-# --- 📋 RAPOR EKRANI ---
+# --- RAPOR EKRANI ---
 else:
-    st.title("🛬 FLIGHT SUMMARY REPORT")
+    st.title("🛬 FLIGHT SUMMARY")
     
     if not st.session_state.gecmis:
-        st.warning("Henüz hiç kelime çözülmedi.")
+        st.warning("No words solved yet.")
     else:
-        # Özet İstatistikler
         total = len(st.session_state.gecmis)
-        accuracy = (st.session_state.dogru / total) * 100 if total > 0 else 0
+        accuracy = (st.session_state.dogru / total) * 100
         
         st.markdown(f"""
         <div class='report-card'>
-            <h3>📊 Performance Overview</h3>
-            <p>Total Words: <b>{total}</b></p>
-            <p>Correct: <b style='color: #00e676;'>{st.session_state.dogru}</b></p>
-            <p>Wrong: <b style='color: #ff5252;'>{st.session_state.yanlis}</b></p>
+            <h3>📈 Session Performance</h3>
             <p>Accuracy: <b>%{accuracy:.1f}</b></p>
+            <p>Words Mastered: <b style='color: #00e676;'>{st.session_state.dogru}</b></p>
+            <p>Needs Review: <b style='color: #ff5252;'>{st.session_state.yanlis}</b></p>
         </div>
         """, unsafe_allow_html=True)
         
-        st.write("### 📝 Detailed Log")
         df = pd.DataFrame(st.session_state.gecmis)
         st.dataframe(df, use_container_width=True, hide_index=True)
 
