@@ -8,6 +8,31 @@ import pandas as pd
 from gtts import gTTS
 from googletrans import Translator
 
+import streamlit as st
+import requests  # İnternetten veri çekmek için bu kütüphaneyi kullanacağız
+
+# 1. GÜVENİLİR KAYNAK URL'Sİ (A1-C2 Arası 5000+ Kelime)
+# Bu URL, profesyonelce hazırlanmış bir JSON dosyasına gider.
+DATA_URL = "https://raw.githubusercontent.com/freetooland/english-vocabulary-data/main/data.json"
+
+@st.cache_data  # i9'u yormayalım; veriyi bir kere çekip hafızada tutar.
+def load_web_data():
+    try:
+        response = requests.get(DATA_URL)
+        return response.json()
+    except:
+        st.error("Kuleyle bağlantı kesildi! İnternetini kontrol et.")
+        return {}
+
+# 2. VERİTABANINI YÜKLE
+kelime_veritabani = load_web_data()
+
+# --- BURADAN SONRASI SENİN ESKİ KODUNUN MANTIĞIYLA DEVAM EDER ---
+# Tek fark: 'kelime_veritabani' değişkenini artık yerel dosyadan değil, internetten çekiyoruz.
+
+st.title("🚀 Aerospace English Mastery (v6.0)")
+# ... (Seviye seçimi, test mantığı vb.)
+
 # --- SİSTEM AYARLARI ---
 st.set_page_config(page_title="Study-Buddy v4.2", page_icon="✈️")
 translator = Translator()
