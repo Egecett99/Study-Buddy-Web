@@ -5,7 +5,8 @@ import os
 from gtts import gTTS
 import io
 
-st.set_page_config(page_title="Study-Buddy v3.9.3", page_icon="✈️")
+# Sayfa Ayarları
+st.set_page_config(page_title="Study-Buddy v3.9.4", page_icon="✈️")
 
 # --- CSS: MODERN PILOT UI ---
 st.markdown("""
@@ -15,7 +16,8 @@ st.markdown("""
     .stTextInput>div>div>input { background-color: #1a1a1a; color: white; border: 1px solid #00e676; border-radius: 8px; }
     h1 { color: #00e676 !important; text-align: center; }
     .word-type { color: #757575; font-style: italic; font-size: 18px; text-align: center; margin-top: -15px; margin-bottom: 20px; }
-    audio { width: 100%; filter: invert(100%); height: 40px; margin-bottom: 20px; }
+    /* Audio Player'ı karanlık temaya uydurma */
+    audio { width: 100%; height: 45px; margin-bottom: 20px; border-radius: 10px; filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) invert(1); }
     </style>
     """, unsafe_allow_html=True)
 
@@ -42,20 +44,22 @@ def soru_belirle():
 if st.session_state.secilen == "":
     soru_belirle()
 
-st.title("✈️ PILOT AUDIO v3.9.3")
-st.write(f"📊 **Skor:** {st.session_state.dogru} / {st.session_state.yanlis}")
+st.title("✈️ PILOT AUDIO v3.9.4")
+st.write(f"📊 **Skor:** {st.session_state.dogru} / {st.session_state.yanlis} | 📦 **Pool:** {len(st.session_state.aktif_havuz)}")
 
 hedef = st.session_state.kelime_listesi[st.session_state.secilen]
 st.markdown(f"<h1>{st.session_state.secilen.upper()}</h1>", unsafe_allow_html=True)
 st.markdown(f"<p class='word-type'>({hedef.get('tur', 'unknown')})</p>", unsafe_allow_html=True)
 
-# --- 🔊 UNIVERSAL AUDIO ENGINE (gTTS) ---
-# Sesi oluşturup bir bellek içine yazıyoruz
-tts = gTTS(text=st.session_state.secilen, lang='en')
-audio_fp = io.BytesIO()
-tts.write_to_fp(audio_fp)
-st.audio(audio_fp, format="audio/mp3")
-st.write("*(Press play to hear the pronunciation)*")
+# --- 🔊 SAFARI-SAFE AUDIO ENGINE ---
+try:
+    tts = gTTS(text=st.session_state.secilen, lang='en')
+    audio_bytes = io.BytesIO()
+    tts.write_to_fp(audio_bytes)
+    # getvalue() kullanarak doğrudan veriyi Safari'ye paslıyoruz
+    st.audio(audio_bytes.getvalue(), format="audio/mpeg")
+except:
+    st.warning("⚠️ Audio engine warming up... Please refresh if error persists.")
 
 if st.session_state.last_result:
     if st.session_state.last_result.startswith("✅"):
@@ -78,12 +82,12 @@ def handle_submit():
         st.session_state.last_result = f"❌ YANLIŞ! Doğrusu: {correct_ans.upper()}"
     soru_belirle()
 
-with st.form(key='universal_audio_form', clear_on_submit=True):
-    st.text_input("Anlamını yaz:", key="ans_input")
-    st.form_submit_button(label='KONTROL ET', on_click=handle_submit)
+with st.form(key='final_audio_form', clear_on_submit=True):
+    st.text_input("Meaning:", key="ans_input")
+    st.form_submit_button(label='CHECK ANSWER', on_click=handle_submit)
 
-with st.expander("💡 İPUCU"):
-    st.write(hedef.get('ornek', 'Cümle yok.'))
+with st.expander("💡 HINT"):
+    st.write(hedef.get('ornek', 'No example sentence.'))
 
 if st.button("NEXT WORD ➡️"):
     st.session_state.last_result = None
