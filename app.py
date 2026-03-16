@@ -4,15 +4,15 @@ import random
 import os
 import streamlit.components.v1 as components
 
-st.set_page_config(page_title="Study-Buddy v3.9.1", page_icon="✈️")
+st.set_page_config(page_title="Study-Buddy v3.9.2", page_icon="✈️")
 
-# --- CSS & Gelişmiş Ses Motoru ---
+# --- CSS & FORCE AUDIO SCRIPT ---
 st.markdown("""
     <style>
     .main { background-color: #101010; color: #00e676; }
     .stButton>button { width: 100%; background-color: #212121; color: #00e676; border: 1px solid #00e676; border-radius: 8px; font-weight: bold; }
     .stTextInput>div>div>input { background-color: #1a1a1a; color: white; border: 1px solid #00e676; border-radius: 8px; }
-    h1 { color: #00e676 !important; text-align: center; margin-bottom: 0px; }
+    h1 { color: #00e676 !important; text-align: center; }
     .word-type { color: #757575; font-style: italic; font-size: 18px; text-align: center; margin-top: -15px; margin-bottom: 20px; }
     </style>
     """, unsafe_allow_html=True)
@@ -40,31 +40,34 @@ def soru_belirle():
 if st.session_state.secilen == "":
     soru_belirle()
 
-st.title("✈️ STUDY-BUDDY AUDIO PRO")
+st.title("✈️ PILOT AUDIO v3.9.2")
 st.write(f"📊 **Skor:** {st.session_state.dogru} / {st.session_state.yanlis}")
 
 hedef = st.session_state.kelime_listesi[st.session_state.secilen]
 st.markdown(f"<h1>{st.session_state.secilen.upper()}</h1>", unsafe_allow_html=True)
 st.markdown(f"<p class='word-type'>({hedef.get('tur', 'unknown')})</p>", unsafe_allow_html=True)
 
-# --- GELİŞMİŞ SES TETİKLEYİCİ ---
-if st.button("🔊 LISTEN (AI VOICE)"):
-    # JavaScript ile konuşmayı her seferinde sıfırlayıp en iyi sesi seçiyoruz
+# --- SAFARI-FRIENDLY AUDIO BUTTON ---
+if st.button("🔊 LISTEN"):
+    # JavaScript'i doğrudan tetikliyoruz
     components.html(f"""
         <script>
-        window.speechSynthesis.cancel(); // Önceki konuşmayı durdur (Takılmayı önler)
-        const msg = new SpeechSynthesisUtterance();
-        msg.text = "{st.session_state.secilen}";
-        msg.lang = 'en-US';
-        msg.rate = 0.85; // Doğal hız
-        msg.pitch = 1.1; // Hafif yapay zeka tonu
-        
-        // Mevcut sesler arasından en iyisini bulmaya çalış
-        const voices = window.speechSynthesis.getVoices();
-        const preferredVoice = voices.find(v => v.name.includes('Google') || v.name.includes('Premium')) || voices[0];
-        if (preferredVoice) msg.voice = preferredVoice;
-        
-        window.parent.speechSynthesis.speak(msg);
+        function playVoice() {{
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance("{st.session_state.secilen}");
+            utterance.lang = 'en-US';
+            utterance.rate = 0.8;
+            utterance.pitch = 1.0;
+            
+            // Safari için ses yükleme beklemesi
+            const voices = window.speechSynthesis.getVoices();
+            if (voices.length > 0) {{
+                utterance.voice = voices.find(v => v.lang.includes('en')) || voices[0];
+            }}
+            
+            window.parent.speechSynthesis.speak(utterance);
+        }}
+        playVoice();
         </script>
     """, height=0)
 
@@ -89,14 +92,14 @@ def handle_submit():
         st.session_state.last_result = f"❌ YANLIŞ! Doğrusu: {correct_ans.upper()}"
     soru_belirle()
 
-with st.form(key='audio_form_pro', clear_on_submit=True):
+with st.form(key='audio_fix_form', clear_on_submit=True):
     st.text_input("Anlamını yaz:", key="ans_input")
     st.form_submit_button(label='KONTROL ET', on_click=handle_submit)
 
-with st.expander("💡 İPUCU (Örnek Cümle)"):
+with st.expander("💡 İPUCU"):
     st.write(hedef.get('ornek', 'Cümle yok.'))
 
-if st.button("SONRAKİ KELİME ➡️"):
+if st.button("NEXT WORD ➡️"):
     st.session_state.last_result = None
     soru_belirle()
     st.rerun()
