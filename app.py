@@ -2,11 +2,12 @@ import streamlit as st
 import json
 import random
 import os
-import streamlit.components.v1 as components
+from gtts import gTTS
+import io
 
-st.set_page_config(page_title="Study-Buddy v3.9.2", page_icon="✈️")
+st.set_page_config(page_title="Study-Buddy v3.9.3", page_icon="✈️")
 
-# --- CSS & FORCE AUDIO SCRIPT ---
+# --- CSS: MODERN PILOT UI ---
 st.markdown("""
     <style>
     .main { background-color: #101010; color: #00e676; }
@@ -14,6 +15,7 @@ st.markdown("""
     .stTextInput>div>div>input { background-color: #1a1a1a; color: white; border: 1px solid #00e676; border-radius: 8px; }
     h1 { color: #00e676 !important; text-align: center; }
     .word-type { color: #757575; font-style: italic; font-size: 18px; text-align: center; margin-top: -15px; margin-bottom: 20px; }
+    audio { width: 100%; filter: invert(100%); height: 40px; margin-bottom: 20px; }
     </style>
     """, unsafe_allow_html=True)
 
@@ -40,36 +42,20 @@ def soru_belirle():
 if st.session_state.secilen == "":
     soru_belirle()
 
-st.title("✈️ PILOT AUDIO v3.9.2")
+st.title("✈️ PILOT AUDIO v3.9.3")
 st.write(f"📊 **Skor:** {st.session_state.dogru} / {st.session_state.yanlis}")
 
 hedef = st.session_state.kelime_listesi[st.session_state.secilen]
 st.markdown(f"<h1>{st.session_state.secilen.upper()}</h1>", unsafe_allow_html=True)
 st.markdown(f"<p class='word-type'>({hedef.get('tur', 'unknown')})</p>", unsafe_allow_html=True)
 
-# --- SAFARI-FRIENDLY AUDIO BUTTON ---
-if st.button("🔊 LISTEN"):
-    # JavaScript'i doğrudan tetikliyoruz
-    components.html(f"""
-        <script>
-        function playVoice() {{
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance("{st.session_state.secilen}");
-            utterance.lang = 'en-US';
-            utterance.rate = 0.8;
-            utterance.pitch = 1.0;
-            
-            // Safari için ses yükleme beklemesi
-            const voices = window.speechSynthesis.getVoices();
-            if (voices.length > 0) {{
-                utterance.voice = voices.find(v => v.lang.includes('en')) || voices[0];
-            }}
-            
-            window.parent.speechSynthesis.speak(utterance);
-        }}
-        playVoice();
-        </script>
-    """, height=0)
+# --- 🔊 UNIVERSAL AUDIO ENGINE (gTTS) ---
+# Sesi oluşturup bir bellek içine yazıyoruz
+tts = gTTS(text=st.session_state.secilen, lang='en')
+audio_fp = io.BytesIO()
+tts.write_to_fp(audio_fp)
+st.audio(audio_fp, format="audio/mp3")
+st.write("*(Press play to hear the pronunciation)*")
 
 if st.session_state.last_result:
     if st.session_state.last_result.startswith("✅"):
@@ -92,7 +78,7 @@ def handle_submit():
         st.session_state.last_result = f"❌ YANLIŞ! Doğrusu: {correct_ans.upper()}"
     soru_belirle()
 
-with st.form(key='audio_fix_form', clear_on_submit=True):
+with st.form(key='universal_audio_form', clear_on_submit=True):
     st.text_input("Anlamını yaz:", key="ans_input")
     st.form_submit_button(label='KONTROL ET', on_click=handle_submit)
 
