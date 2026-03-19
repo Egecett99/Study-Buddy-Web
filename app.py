@@ -10,7 +10,7 @@ from gtts import gTTS
 from googletrans import Translator
 
 # --- SİSTEM AYARLARI ---
-st.set_page_config(page_title="Study-Buddy v5.3", page_icon="✈️", layout="wide")
+st.set_page_config(page_title="Study-Buddy v5.4", page_icon="✈️", layout="wide")
 translator = Translator()
 
 DB_FILE = "vocabulary.json"
@@ -50,11 +50,13 @@ if 'mode' not in st.session_state:
     st.session_state.gecmis = []
     st.session_state.last_result = None
 
-# --- SIDEBAR: HANGAR ---
+# --- SIDEBAR: HANGAR (EKLEME & SİLME) ---
 with st.sidebar:
     st.header("🔧 Maintenance Hangar")
-    input_text = st.text_area("Add Words (Bulk/Single):", placeholder="empirical, deviate, fluctuate...").strip().lower()
     
+    # KELİME EKLEME
+    st.subheader("📥 Add Words")
+    input_text = st.text_area("Bulk/Single:", placeholder="empirical, deviate...", key="add_area").strip().lower()
     if st.button("🚀 ADD TO DATABASE"):
         if input_text:
             words = [w.strip() for w in input_text.replace(',', '\n').split('\n') if w.strip()]
@@ -62,9 +64,7 @@ with st.sidebar:
             progress = st.progress(0)
             for i, word in enumerate(words):
                 try:
-                    # Çeviri (Daha insani çeviri denemesi)
                     tr_res = translator.translate(word, src='en', dest='tr').text.lower()
-                    # Eğer çeviri çok garipse (ampirik gibi), en azından sözlüğe bak
                     dict_url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
                     res = requests.get(dict_url, timeout=5)
                     w_type, example = "noun", "No example."
@@ -85,6 +85,23 @@ with st.sidebar:
             save_db(db)
             st.success("Hangar updated!")
             st.rerun()
+
+    st.divider()
+    
+    # KELİME SİLME
+    st.subheader("🗑️ Remove Word")
+    delete_word = st.text_input("Word to delete:", key="del_input").strip().lower()
+    if st.button("❌ DELETE FROM DB"):
+        db = load_db()
+        if delete_word in db:
+            del db[delete_word]
+            save_db(db)
+            st.success(f"Removed: {delete_word}")
+            st.rerun()
+        else:
+            st.error("Word not found!")
+
+    st.divider()
     st.info(f"Words in DB: {len(load_db())}")
 
 # --- MENU ---
@@ -98,7 +115,10 @@ if st.session_state.mode == "menu":
             st.session_state.active_pool = {k: v for k, v in db.items() if v['tur'] in selected}
             st.session_state.mode = "flight"
             st.session_state.secilen = ""
+            st.session_state.last_result = None
             st.rerun()
+    else:
+        st.warning("Database empty! Add words from sidebar.")
 
 # --- FLIGHT ---
 elif st.session_state.mode == "flight":
@@ -114,7 +134,6 @@ elif st.session_state.mode == "flight":
         b = io.BytesIO(); tts.write_to_fp(b); st.audio(b.getvalue())
     except: pass
 
-    # GERİ BİLDİRİM VE O MEŞHUR BUTON
     if st.session_state.last_result:
         if "✅" in st.session_state.last_result:
             st.success(st.session_state.last_result)
