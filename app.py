@@ -9,19 +9,18 @@ from gtts import gTTS
 from googletrans import Translator
 
 # --- SİSTEM AYARLARI ---
-st.set_page_config(page_title="Aerospace Mastery v7.0", page_icon="✈️", layout="wide")
+st.set_page_config(page_title="Study-Buddy v4.2", page_icon="✈️")
 translator = Translator()
 
-# GÜVENİLİR SÖZLÜK KAYNAĞI (CEFR A1-C2 Data)
-DATA_URL = "https://raw.githubusercontent.com/freetooland/english-vocabulary-data/main/data.json"
-
-@st.cache_data
-def load_global_data():
+# Python 3.14 CGI Yaması
+try:
+    import cgi
+except ImportError:
     try:
-        response = requests.get(DATA_URL, timeout=10)
-        return response.json()
-    except:
-        return {}
+        import legacy_cgi as cgi
+        sys.modules["cgi"] = cgi
+    except ImportError:
+        pass
 
 # --- CSS: PILOT UI ---
 st.markdown("""
@@ -33,7 +32,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- AI KELİME ANALİZCİSİ (CUSTOM LIST İÇİN) ---
+# --- AI KELİME ANALİZCİSİ ---
 def process_user_list(text):
     words = [w.strip() for w in text.replace(',', '\n').split('\n') if w.strip()]
     processed = {}
@@ -59,7 +58,7 @@ def process_user_list(text):
         bar.progress((i + 1) / len(words))
     return processed
 
-# --- SESSION STATE ---
+# --- SESSION STATE INITIALIZATION ---
 if 'mode' not in st.session_state:
     st.session_state.mode = "menu"
     st.session_state.active_pool = {}
@@ -71,68 +70,60 @@ if 'mode' not in st.session_state:
 
 # --- MENU EKRANI ---
 if st.session_state.mode == "menu":
-    st.title("👨‍✈️ PILOT SELECTION MENU - v7.0")
+    st.title("👨‍✈️ PILOT SELECTION MENU")
     
     col1, col2 = st.columns(2)
     with col1:
-        st.subheader("📦 Global Dictionary (A1-C2)")
-        all_data = load_global_data()
-        
-        if all_data:
-            # Seviyeleri ve Türleri Ayıkla
-            available_levels = sorted(list(set(v['seviye'] for v in all_data.values())))
-            available_types = sorted(list(set(v['tur'] for v in all_data.values())))
-            
-            sel_level = st.selectbox("Select Flight Level (CEFR):", available_levels)
-            sel_type = st.selectbox("Select Word Type:", ["All Types"] + available_types)
-            
-            if st.button("🚀 START GLOBAL MISSION"):
-                # Filtreleme Uygula
-                if sel_type == "All Types":
-                    st.session_state.active_pool = {k: v for k, v in all_data.items() if v['seviye'] == sel_level}
-                else:
-                    st.session_state.active_pool = {k: v for k, v in all_data.items() if v['seviye'] == sel_level and v['tur'] == sel_type}
-                
-                if st.session_state.active_pool:
+        st.subheader("📦 Main Database")
+        if st.button("START WITH FIXED POOL"):
+            try:
+                with open("kelime_veritabani.json", "r", encoding="utf-8") as f:
+                    # Hafızayı temizle ve yeni havuzu yükle
+                    st.session_state.active_pool = json.load(f)
                     st.session_state.mode = "flight"
-                    st.session_state.secilen = ""
+                    st.session_state.secilen = "" # Önceki seçimi sıfırla
                     st.rerun()
-                else:
-                    st.error("No words found for this combination!")
-        else:
-            st.error("Database connection error!")
-
+            except Exception as e:
+                st.error(f"Database error: {e}")
+                
     with col2:
-        st.subheader("📝 Custom Cargo List")
-        user_input = st.text_area("Paste words:", placeholder="undertake, velocity...", height=150)
-        if st.button("🛠️ CREATE CUSTOM SESSION"):
+        st.subheader("📝 Custom List")
+        user_input = st.text_area("Paste words:", placeholder="undertake, velocity...", key="user_input_area")
+        if st.button("CREATE CUSTOM SESSION"):
             if user_input:
                 with st.spinner("AI Analyzing..."):
+                    # Hafızayı temizle ve kullanıcının havuzunu yükle
                     st.session_state.active_pool = process_user_list(user_input)
                     st.session_state.mode = "flight"
-                    st.session_state.secilen = ""
+                    st.session_state.secilen = "" # Önceki seçimi sıfırla
                     st.rerun()
+            else: st.warning("Please enter some words first!")
 
 # --- FLIGHT (TEST) EKRANI ---
 elif st.session_state.mode == "flight":
+    # Havuz boşsa menüye at
+    if not st.session_state.active_pool:
+        st.session_state.mode = "menu"
+        st.rerun()
+
+    # Yeni kelime seçimi
     if not st.session_state.secilen:
         st.session_state.secilen = random.choice(list(st.session_state.active_pool.keys()))
     
     target = st.session_state.active_pool[st.session_state.secilen]
     
     st.markdown(f"<div class='word-header'>{st.session_state.secilen.upper()}</div>", unsafe_allow_html=True)
-    st.markdown(f"<div class='word-info'>({target['tur']}) | {target.get('seviye', 'Custom')}</div>", unsafe_allow_html=True)
+    st.markdown(f"<div class='word-info'>({target['tur']}) | {target.get('kullanim', 'Standard')}</div>", unsafe_allow_html=True)
 
     # Ses Motoru
-    try:
-        tts = gTTS(text=st.session_state.secilen, lang='en')
-        b = io.BytesIO(); tts.write_to_fp(b)
-        st.audio(b.getvalue())
-    except: pass
+    tts = gTTS(text=st.session_state.secilen, lang='en')
+    b = io.BytesIO(); tts.write_to_fp(b)
+    st.audio(b.getvalue())
 
-    # Geri Bildirim
+    # Geri Bildirim ve Düzeltme
     if st.session_state.last_result:
-        if "✅" in st.session_state.last_result: st.success(st.session_state.last_result)
+        if "✅" in st.session_state.last_result:
+            st.success(st.session_state.last_result)
         else:
             st.error(st.session_state.last_result)
             if st.button("⚠️ I actually knew this!"):
@@ -145,7 +136,7 @@ elif st.session_state.mode == "flight":
     with st.form(key='ans_form', clear_on_submit=True):
         ans = st.text_input("Meaning?")
         if st.form_submit_button("CHECK"):
-            correct = target['anlam'].lower().strip()
+            correct = target['anlam'].lower()
             if ans.strip().lower() == correct:
                 st.session_state.dogru += 1
                 st.session_state.last_result = f"✅ CORRECT! {st.session_state.secilen.upper()} = {correct.upper()}"
@@ -154,7 +145,7 @@ elif st.session_state.mode == "flight":
                 st.session_state.last_result = f"❌ WRONG! Correct: {correct.upper()}"
             
             st.session_state.gecmis.append({"Word": st.session_state.secilen.upper(), "Result": st.session_state.last_result})
-            st.session_state.secilen = ""
+            st.session_state.secilen = "" # Yeni kelime seçilmesi için sıfırla
             st.rerun()
 
     with st.expander("💡 HINT (Sentence)"):
@@ -170,6 +161,7 @@ else:
     st.write(f"📊 **Score:** {st.session_state.dogru} / {st.session_state.yanlis}")
     st.table(pd.DataFrame(st.session_state.gecmis))
     if st.button("🔄 BACK TO MENU"):
+        # HER ŞEYİ SIFIRLA
         st.session_state.mode = "menu"
         st.session_state.secilen = ""
         st.session_state.gecmis = []
