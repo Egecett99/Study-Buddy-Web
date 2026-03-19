@@ -55,8 +55,7 @@ if 'mode' not in st.session_state:
 with st.sidebar:
     st.header("🔧 Maintenance Hangar")
     st.subheader("Add Words (Single or Bulk)")
-    # İster "thrust" yaz, ister "thrust, wing, pilot" yaz
-    input_text = st.text_area("Write words (use comma or new line):", placeholder="thrust, fuselage, drag...").strip().lower()
+    input_text = st.text_area("Write words:", placeholder="thrust, analyze, stable...").strip().lower()
     
     if st.button("🚀 ADD TO DATABASE"):
         if input_text:
@@ -65,35 +64,58 @@ with st.sidebar:
             progress_bar = st.progress(0)
             
             for i, word in enumerate(words_to_process):
-                with st.spinner(f"Processing: {word}..."):
+                with st.spinner(f"Scanning: {word}..."):
                     try:
                         if word not in db:
-                            # AI Çeviri ve Tür Bulma
+                            # 1. Anlamı Çevir
                             tr = translator.translate(word, src='en', dest='tr').text.lower()
+                            
+                            # 2. Tür ve Örnek İçin API Sorgula
                             dict_url = f"https://api.dictionaryapi.dev/api/v2/entries/en/{word}"
                             res = requests.get(dict_url, timeout=5)
-                            w_type, example = "noun", "No example found."
+                            
+                            w_type = "unknown"
+                            example = "No example found."
                             
                             if res.status_code == 200:
                                 data = res.json()[0]
-                                w_type = data['meanings'][0]['partOfSpeech']
+                                # Kelimenin TÜM türlerini al (noun, verb, adjective...)
+                                types = [m['partOfSpeech'] for m in data['meanings']]
+                                
+                                # Eğer kelime bir fiilse, genellikle fiil anlamı daha önemlidir
+                                if 'verb' in types:
+                                    w_type = 'verb'
+                                elif 'adjective' in types:
+                                    w_type = 'adjective'
+                                else:
+                                    w_type = types[0] # Hiçbiri yoksa ilkini al
+                                
+                                # Örnek Cümle Bulma
                                 for m in data['meanings']:
-                                    for d in m['definitions']:
-                                        if 'example' in d:
-                                            example = d['example']
-                                            break
-                            db[word] = {"anlam": tr, "tur": w_type, "ornek": example, "kullanim": "Manual Entry"}
+                                    if m['partOfSpeech'] == w_type: # Seçtiğimiz türe ait örneği ara
+                                        for d in m['definitions']:
+                                            if 'example' in d:
+                                                example = d['example']
+                                                break
+                            
+                            # Veritabanına Kaydet
+                            db[word] = {
+                                "anlam": tr, 
+                                "tur": w_type, 
+                                "ornek": example, 
+                                "kullanim": "Manual Entry"
+                            }
                     except:
-                        db[word] = {"anlam": word, "tur": "unknown", "ornek": "Details not found.", "kullanim": "Error Recovery"}
+                        db[word] = {"anlam": word, "tur": "unknown", "ornek": "Details not found.", "kullanim": "Error"}
+                
                 progress_bar.progress((i + 1) / len(words_to_process))
             
             save_db(db)
-            st.success(f"Log: {len(words_to_process)} words processed!")
+            st.success(f"Log: {len(words_to_process)} items analyzed!")
             st.rerun()
     
     st.divider()
-    db_count = len(load_db())
-    st.info(f"Hangar Status: {db_count} words")
+    st.info(f"Hangar Status: {len(load_db())} words")
 
 # --- MENU EKRANI ---
 if st.session_state.mode == "menu":
